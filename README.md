@@ -2,6 +2,10 @@
 
 Questo progetto contiene esperimenti con il [robot NAO](https://www.ald.softbankrobotics.com).
 
+Un elenco completo di esempi per le varie funzioni di libreria è consultabile
+nella documentazione online della API di NAO all'indirizzo:
+http://doc.aldebaran.com/1-14/naoqi/
+
 ## Contenuto della directory
 
 Ecco una presentazione dei file contenuti in questo repository:
