@@ -41,6 +41,7 @@ Esempio:
 ```
 PUT /api/v1/languages/Italian HTTP/1.1
 Host: nao
+Content-Type: application/json
 
 { "active": true }
 ```
@@ -59,6 +60,7 @@ Esempio:
 ```
 PUT /api/v1/text2speech/ HTTP/1.1
 Host: nao
+Content-Type: application/json
 
 { "action": "say", "text": "Ciao mondo!" }
 ```

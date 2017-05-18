@@ -5,8 +5,8 @@ Per tradurre queste belle parole in pratica, proviamo a definire una API REST pe
 ## Requisiti per la parte BRIDGE (ponte tra utente e NAO)
 
  * HTML e PHP di base (nota: nel corso non è fatto JavaScript e quindi AJAX)
- * La possibilità di PHP di trasformarsi in un client REST per interfacciarsi con la API [DAL-PHP-ALLA-API.md]()
- * La API di NAO per queste operazioni. Descritta su [API-REST-NAO.md]()
+ * La possibilità di PHP di trasformarsi in un client REST per interfacciarsi con la API [DAL-PHP-ALLA-API.md](DAL-PHP-ALLA-API.md)
+ * La API di NAO per queste operazioni. Descritta su [API-REST-NAO.md](API-REST-NAO.md)
 
 Quale funzionalità di NAO possiamo realizzare?
 
