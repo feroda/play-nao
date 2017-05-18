@@ -31,24 +31,4 @@ Come vengono mappate su HTTP le operazioni CRUD (= Create, Read, Update, Delete)
  * PUT  -> U = UPDATE = aggiorna la risorsa identificata dall'URI (sia essa una collezione o un elemento)
  * DELETE -> D = DELETE = elimina la risorsa identificata dall'URI (sia essa una collezione o un elemento)
 
-## L'esperimento
-
-Per tradurre queste belle parole in pratica, proviamo a definire una API REST per pilotare il robot NAO.
-
-Come possiamo fare?
-
-Abbiamo parlato di API, perciò abbiamo bisogno di poter interagire con NAO attraverso una interfaccia HTTP secondo i principi definiti da REST.
-
-Per fare cosa?
-
-Possiamo decidere di implementare le seguenti azioni:
-
-* recuperare le lingue disponibili: "ALTextToSpeech.getAvailableLanguages()"
-* impostare la lingua: "ALTextToSpeech.setLanguage(string))"
-* dire una frase: "ALTextToSpeech.say(text)"
-* impostare il volume: "ALTextToSpeech.setVolume(float 0-1)"
-* impostare una postura: http://doc.aldebaran.com/2-1/family/robots/postures_robot.html#robot-postures
-* ottenere la postura: "ALRobotPosture.getPosture()"
-* ottenere la lista di tutte le possibili posture: "ALRobotPosture.getPostureFamilyList()"
-* camminare in cerchio per un certo tempo "ALMotion.setWalkTargetVelocity(x, y, theta, frequency)"
-
+[Passa a leggere l'esperimento](ESPERIMENTO.md)
