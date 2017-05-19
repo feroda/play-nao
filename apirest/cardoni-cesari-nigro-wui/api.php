@@ -1,5 +1,8 @@
 
 <html>
+<head>
+</head>
+<body>
 
 <?php
 // DO REST HTTP REQUEST with json payload
@@ -29,11 +32,23 @@ function do_rest($method,$url,$json=NULL,$options=NULL) {
   return($response);
 }
 
-do_rest("PUT", "http://192.168.10.12:8080/api/v1/languages/".$_POST["lingua"], "{"active": true}");
-do_rest("POST", "http://192.168.10.12:8080/api/v1/text2speech/", { "action": "say", "text": $_POST["parola"] });
+$NAO_BASE_URL="http://192.168.10.12:8080/";
 
-echo "La lingua selezionata e'".$_POST["lingua"]."e la frase detta e'".$_POST["parola"];
+if (isset($_POST["parola"])) {
+    $lingua=$_POST["lingua"];
+    $frase=$_POST["parola"];
+} else {
+    $lingua="Italian";
+    $frase="Ciao mondo... per prova ";
+    $frase.="dato che probabilmente mi stai lanciando da una GET o da linea di comando";
+}
+
+do_rest("PUT", $NAO_BASE_URL."api/v1/languages/".$lingua, '{ "active": true }');
+do_rest("POST", $NAO_BASE_URL."api/v1/text2speech/", '{ "action": "say", "text": $_POST["parola"]}');
+
+echo "La lingua selezionata e' ".$lingua." e la frase detta e' ".$frase;
 
 ?>
 
+</body>
 </html>
