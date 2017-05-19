@@ -1,0 +1,11 @@
+<html>
+
+<form action="api.php" method="post">
+  <input type="text" name="parola"><br>
+  <input type="radio" name="lingua" value="English">English <br>
+  <input type="radio" name="lingua" value="Italian">Italian <br>
+<button type="submit">Invia</button>
+
+</form>
+
+</html>
