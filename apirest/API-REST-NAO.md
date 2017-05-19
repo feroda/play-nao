@@ -58,7 +58,7 @@ Content-Type: application/json
 Esempio:
 
 ```
-PUT /api/v1/text2speech/ HTTP/1.1
+POST /api/v1/text2speech/ HTTP/1.1
 Host: nao
 Content-Type: application/json
 
