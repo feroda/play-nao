@@ -6,6 +6,7 @@ altrimenti proveremo ad installarla con `apt-get` come sappiamo fare.
 Poi utilizzeremo questa funzione:
 
 ```
+<?php 
 // DO REST HTTP REQUEST with json payload
 function do_rest($method,$url,$json=NULL,$options=NULL) {
   global $http_handle,$adb_option_defaults;
@@ -32,6 +33,7 @@ function do_rest($method,$url,$json=NULL,$options=NULL) {
 
   return($response);
 }
+?>
 ```
 
 (originariamente presa da: http://php.net/manual/en/curl.examples-basic.php#112076)
