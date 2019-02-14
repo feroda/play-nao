@@ -46,6 +46,7 @@ def naoapi_set_language(lang):
         if data["active"] is True:
             print("imposto la lingua attiva a %s" % lang)
             nao_set_language(lang)
+            nao_speak("Lingua attiva %s" % lang)
     else:
         rv["code"] = 404
         rv["notices"] = ["Language %s is not available" % lang]
