@@ -1,0 +1,18 @@
+[Unit]
+Description=Heart Rate Monitor simple
+ConditionPathExists=/dev/i2c-1
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/local/play-nao/LifeIsNAO-bot/hrmon/
+ExecStart=/usr/bin/python read_hrm.py
+PIDFile=/var/run/hrmon.pid
+RestartSec=5
+Restart=always
+KillSignal=SIGTERM
+StandardError=syslog
+NotifyAccess=all
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target
