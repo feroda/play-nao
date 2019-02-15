@@ -39,20 +39,43 @@ def build_menu(buttons,
 def present(bot, update):
   print("ciao")
   button_table = [
-      [InlineKeyboardButton("gura", callback_data="Guramrit"),
-      InlineKeyboardButton("gurshy", callback_data="Gursharn")
+      [InlineKeyboardButton("/p Valerio", callback_data="Valerio"),
+      InlineKeyboardButton("/p Guramrit", callback_data="Guramrit")
       ],
       [
-      InlineKeyboardButton("remus", callback_data="Valerio"),
+      InlineKeyboardButton("/p Gursharn", callback_data="Gursharn"),
+      InlineKeyboardButton("/p Angelo", callback_data="Angelo")
+      ],
+      [
+      InlineKeyboardButton("/p Ferdinando", callback_data="Ferdinando"),
+      InlineKeyboardButton("/p Nicolas", callback_data="Nicolas")
+      ],
+      [
+      InlineKeyboardButton("/p Marta", callback_data="Marta"),
+      InlineKeyboardButton("/p Sharon", callback_data="Sharon")
+      ],
+      [
+      InlineKeyboardButton("/p Jamila", callback_data="Jamila"),
+      InlineKeyboardButton("/p Giacomo", callback_data="Giacomo")
       ]
   ]
-  print(button_list)
+  print(button_table)
   # reply_markup = InlineKeyboardMarkup(build_menu(button_list, n_cols=2))
-  reply_markup = ReplyKeyboardMarkup([button_table])
+  reply_markup = ReplyKeyboardMarkup(button_table)
   print("bau")
   chat_id = update.message.chat.id
   print(chat_id)
-  bot.send_message(chat_id, "A two-column menu", reply_markup=reply_markup)
+  bot.send_message(chat_id, "Ecco qui il menu", reply_markup=reply_markup)
+
+def p(bot, update):
+    pst = 'Ora parla {}'.format(
+		update.message.text[len('/p '):])
+
+    update.message.reply_text(pst)
+
+    tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
+    tts.say(pst)
+
 
   #  answ = 
 
@@ -72,6 +95,7 @@ updater = Updater(TOKEN)
 updater.dispatcher.add_handler(CommandHandler('naohello', hello))
 updater.dispatcher.add_handler(CommandHandler('naosay', naosay))
 updater.dispatcher.add_handler(CommandHandler('naopresent', present))
+updater.dispatcher.add_handler(CommandHandler('p', p))
 
 updater.start_polling()
 updater.idle()
