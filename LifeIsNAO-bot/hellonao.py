@@ -52,7 +52,7 @@ def present(bot, update):
       ],
       [
       InlineKeyboardButton("/p Marta", callback_data="Marta"),
-      InlineKeyboardButton("/p Sharon", callback_data="Sharon")
+      InlineKeyboardButton("/p Amira", callback_data="Amira")
       ],
       [
       InlineKeyboardButton("/p Jamila", callback_data="Jamila"),
