@@ -17,6 +17,8 @@ from settings import TOKEN, NAO_IP, NAO_PORT
 event_received = 0
 sockinfo = None
 
+filepath = '/home/remus/play-nao/LifeIsNAO-bot/abc.txt'
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -97,6 +99,22 @@ def p(bot, update):
 def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
+
+def fileread(bot, update):
+    with open(filepath) as F:
+      line = F.readline()
+      if line != 'NODATA' and line != 'ERROR':
+        value = float(line)/160
+        
+        update.message.reply_text(value)
+
+        msg = 'Il valore è {}'.format(
+        value  
+        ).replace('.', ',')
+
+        tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
+        tts.say(msg)
+
 
 
 #def Q&A():
