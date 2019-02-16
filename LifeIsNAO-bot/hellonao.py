@@ -2,6 +2,7 @@
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
 #aggiungee "Bot" alla linea sopra
+#presentazione conclusa
 
 from naoqi import ALProxy
 
