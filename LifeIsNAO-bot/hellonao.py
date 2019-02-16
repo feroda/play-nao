@@ -1,12 +1,17 @@
 #-*- coding: utf-8 -*-
-from telegram.ext import Updater, CommandHandler 
-from telegram import ReplyKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
 #aggiungee "Bot" alla linea sopra
 
 from naoqi import ALProxy
 
 from settings import TOKEN, NAO_IP, NAO_PORT
 
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def hello(bot, update):
     msg = 'Hello {},sei in chat {}'.format(
@@ -39,7 +44,7 @@ def build_menu(buttons,
 def present(bot, update):
   print("ciao")
   button_table = [
-      [InlineKeyboardButton("/p Valerio", callback_data="Valerio"),
+      [InlineKeyboardButton("/p Valerio", callback_data="1"),
       InlineKeyboardButton("/p Guramrit", callback_data="Guramrit")
       ],
       [
@@ -60,7 +65,7 @@ def present(bot, update):
       ]
   ]
   print(button_table)
-  # reply_markup = InlineKeyboardMarkup(build_menu(button_list, n_cols=2))
+  reply_markup = InlineKeyboardMarkup(build_menu(button_table, n_cols=2))
   reply_markup = ReplyKeyboardMarkup(button_table)
   print("bau")
   chat_id = update.message.chat.id
@@ -76,6 +81,16 @@ def p(bot, update):
     tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
     tts.say(pst)
 
+# def button(update, context):
+#     print("Bottone")
+#     query = update.callback_query
+#     print ("bottone")
+#     query.edit_message_text(text="Selected option: {}".format(query.data))
+
+def error(update, context):
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, context.error)
+
 
   #  answ = 
 
@@ -90,13 +105,18 @@ def p(bot, update):
 # bot.send_message(chat_id, msg)
 # dove msg è il testo recuperato dalla memoria di NAO
 
-updater = Updater(TOKEN)
+def main():
+  updater = Updater(TOKEN)
 
-updater.dispatcher.add_handler(CommandHandler('naohello', hello))
-updater.dispatcher.add_handler(CommandHandler('naosay', naosay))
-updater.dispatcher.add_handler(CommandHandler('naopresent', present))
-updater.dispatcher.add_handler(CommandHandler('p', p))
+  updater.dispatcher.add_handler(CommandHandler('naohello', hello))
+  updater.dispatcher.add_handler(CommandHandler('naosay', naosay))
+  updater.dispatcher.add_handler(CommandHandler('naopresent', present))
+  updater.dispatcher.add_handler(CommandHandler('p', p))
+ # updater.dispatcher.add_handler(CallbackQueryHandler(button))
+  updater.dispatcher.add_error_handler(error)
 
-updater.start_polling()
-updater.idle()
+  updater.start_polling()
+  updater.idle()
 
+if __name__ == '__main__':
+  main()
