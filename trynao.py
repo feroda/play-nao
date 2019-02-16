@@ -21,7 +21,7 @@ def say(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ip', default=NAO_IP)
-    parser.add_argument('--port', default=9559)
+    parser.add_argument('--port', default=9559, type=int)
     parser.add_argument('--posture', default="Crouch")
     parser.add_argument('--dialog', default=None)
     args = parser.parse_args()
