@@ -23,7 +23,9 @@ if __name__ == '__main__':
     parser.add_argument('--ip', default=NAO_IP)
     parser.add_argument('--port', default=9559)
     parser.add_argument('--posture', default="Crouch")
-    parser.add_argument('--dialog', default="Ciao a tutti!")
+    parser.add_argument('--dialog', default=None)
     args = parser.parse_args()
-    go_to_posture(args)
-    say(args)
+    if args.dialog:
+        say(args)
+    else:
+        go_to_posture(args)
