@@ -130,28 +130,49 @@ class HumanAnsweredQuestionModule(ALModule):
             "HumanAnsweredQuestion",
             "onAnswerGiven")
 
+        self.answers = []
+        # Inserire qui le domande vere
+        self.questions = [
+            "Quanti hanni hai?",
+            "Hai mangiato oggi?",
+        ]
+
     def onAnswerGiven(self, *args):
-        """ This will be called each time a face is
-        detected.
-
+        """ This will be called each time an answer is given
         """
-        # Unsubscribe to the event when talking,
-        # to avoid repetitions
-        # memory.unsubscribeToEvent("FaceDetected",
-        #     "HumanAnsweredQuestion")
-
-        print("Aggiunta la chiave %s" % str(args))
-        if args[0].startswith("Domanda"):
-            answer = memory.GetData(args[0])
-            # freq_value = fileread_sensor()
-            print("answer = %s" % answer)
-            answer = memory.RemoveData(args[0])
+        # OLD Unsubscribe to the event when talking,
+        # OLD to avoid repetitions
+        # OLD memory.unsubscribeToEvent("FaceDetected",
+        # OLD     "HumanAnsweredQuestion")
 
 
-        # Subscribe again to the event
-        # memory.subscribeToEvent("FaceDetected",
-        #     "HumanAnsweredQuestion",
-        #     "onFaceDetected")
+        print("Rilevata risposta")
+        msg = ""
+        for i in range(len(self.questions)):
+            try:
+                question = self.questions[i-1]
+                answer = memory.GetData("Domanda/%s" % i)
+                msg += u"* Q:%s A:%s\n" % (question, answer)
+            except Exception as e:
+                # Qui ci va alla prima chiave che non esiste
+                # Esce dal ciclo
+                break
+
+        # Leggere il valore istantaneo dal sensore
+        freq_value = ""  # TODO  scrivere funzione fileread_sensor()
+        msg += " * FREQUENZA: %s\n" % freq_value
+
+        # Leggere gli ultimi 10 valori dal sensore
+        last_frequencies = ""  # TODO scrivere funzione fileread_sensor_last_values(n=10)
+        msg += " * ULTIME: %s\n" % last_frequencies
+
+        # Inviare il messaggio al BOT
+        # TODO bot.send_message(chat_id, msg)
+
+        # OLD Subscribe again to the event
+        # OLD memory.subscribeToEvent("FaceDetected",
+        # OLD     "HumanAnsweredQuestion",
+        # OLD     "onFaceDetected")
 
 def main():
 
