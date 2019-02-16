@@ -1,14 +1,21 @@
 #-*- coding: utf-8 -*-
+
+import logging
+import time
+import argparse
+import sys
+
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
 #aggiungee "Bot" alla linea sopra
 #presentazione conclusa
 
-from naoqi import ALProxy
+from naoqi import *
 
 from settings import TOKEN, NAO_IP, NAO_PORT
 
-import logging
+event_received = 0
+sockinfo = None
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -21,16 +28,16 @@ def hello(bot, update):
 
     update.message.reply_text(msg)
 
-    tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
     tts.say(msg)
-		
+
 def naosay(bot, update):
     txt = update.message.text[len('/naosay '):]
     update.message.reply_text(txt)
-    
-    tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
+
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
     tts.say(txt.encode("utf-8"))
-    
+
 def build_menu(buttons,
                n_cols,
                header_buttons=None,
@@ -43,7 +50,6 @@ def build_menu(buttons,
     return menu
 
 def present(bot, update):
-  print("ciao")
   button_table = [
       [InlineKeyboardButton("/p Valerio", callback_data="1"),
       InlineKeyboardButton("/p Guramrit", callback_data="Guramrit")
@@ -79,7 +85,7 @@ def p(bot, update):
 
     update.message.reply_text(pst)
 
-    tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
     tts.say(pst)
 
 # def button(update, context):
@@ -93,31 +99,94 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
-  #  answ = 
-
 #def Q&A():
-#   risp = ALProxy("ALMemory", NAO_IP, NAO_PORT)
+#   risp = ALProxy("ALMemory", sockinfo.ip, sockinfo.port)
 
-    
-    
-#bot = Bot(TOKEN)
+
+# bot = Bot(TOKEN)
 # subscribe to event
 # nella funzione o nel modulo chiamato come callback si fa
 # bot.send_message(chat_id, msg)
 # dove msg è il testo recuperato dalla memoria di NAO
 
+
+class HumanAnsweredQuestionModule(ALModule):
+    """ A simple module able to react
+    to facedetection events
+
+    """
+    def __init__(self, name):
+        ALModule.__init__(self, name)
+        # No need for IP and port here because
+        # we have our Python broker connected to NAOqi broker
+
+        # Create a proxy to ALTextToSpeech for later use
+        self.tts = ALProxy("ALTextToSpeech")
+
+        # Subscribe to the FaceDetected event:
+        global memory
+        memory = ALProxy("ALMemory")
+        memory.subscribeToEvent("AnswerGiven",
+            "HumanAnsweredQuestion",
+            "onAnswerGiven")
+
+    def onAnswerGiven(self, *args):
+        """ This will be called each time a face is
+        detected.
+
+        """
+        # Unsubscribe to the event when talking,
+        # to avoid repetitions
+        # memory.unsubscribeToEvent("FaceDetected",
+        #     "HumanAnsweredQuestion")
+
+        print("Aggiunta la chiave %s" % str(args))
+        if args[0].startswith("Domanda"):
+            answer = memory.GetData(args[0])
+            # freq_value = fileread_sensor()
+            print("answer = %s" % answer)
+            answer = memory.RemoveData(args[0])
+
+
+        # Subscribe again to the event
+        # memory.subscribeToEvent("FaceDetected",
+        #     "HumanAnsweredQuestion",
+        #     "onFaceDetected")
+
 def main():
-  updater = Updater(TOKEN)
 
-  updater.dispatcher.add_handler(CommandHandler('naohello', hello))
-  updater.dispatcher.add_handler(CommandHandler('naosay', naosay))
-  updater.dispatcher.add_handler(CommandHandler('naopresent', present))
-  updater.dispatcher.add_handler(CommandHandler('p', p))
- # updater.dispatcher.add_handler(CallbackQueryHandler(button))
-  updater.dispatcher.add_error_handler(error)
+    # Parse Args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ip', default=NAO_IP)
+    parser.add_argument('--port', default=NAO_PORT, type=int)
+    # Enable or disable naoqi
+    # parser.add_argument('--naoqi', action="store_true", default=False)
+    global sockinfo
+    sockinfo = parser.parse_args()
 
-  updater.start_polling()
-  updater.idle()
+    # Start NAO Broker
+    myBroker = ALBroker("myBroker", "0.0.0.0", 0, sockinfo.ip, sockinfo.port)
+    # Warning: HumanAnsweredQuestion must be a global variable
+    # The name given to the constructor must be the name of the
+    # variable
+    global HumanAnsweredQuestion
+    HumanAnsweredQuestion = HumanAnsweredQuestionModule("HumanAnsweredQuestion")
+
+    # Start BOT
+    def terminate(self, signal_name):
+        print("Interrupted bot and NAO module by user, shutdown")
+        myBroker.shutdown()
+        sys.exit(0)
+
+    updater = Updater(TOKEN, user_sig_handler=terminate)
+    updater.dispatcher.add_handler(CommandHandler('naohello', hello))
+    updater.dispatcher.add_handler(CommandHandler('naosay', naosay))
+    updater.dispatcher.add_handler(CommandHandler('naopresent', present))
+    updater.dispatcher.add_handler(CommandHandler('p', p))
+    updater.dispatcher.add_error_handler(error)
+
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == '__main__':
-  main()
+    main()
