@@ -1,15 +1,29 @@
-#!/usr/bin/env python
+#!/usr/bin/qemu-i386-static /usr/bin/python
 
 import sys
+import argparse
+
 from naoqi import ALProxy
 
-NAO_IP = '127.0.0.1'
-NAO_PORT = 9000
+NAO_IP = '192.168.10.10'
 
-try:
-	posture = sys.argv[1]
-except IndexError:
-	posture = "Crouch"
+def go_to_posture(args):
 
-postureProxy = ALProxy("ALRobotPosture", NAO_IP, NAO_PORT)
-postureProxy.goToPosture(posture, 0.5)
+    postureProxy = ALProxy("ALRobotPosture", args.ip, args.port)
+    postureProxy.goToPosture(args.posture, 0.5)
+
+def say(args):
+
+    ttsProxy = ALProxy("ALTextToSpeech", args.ip, args.port)
+    ttsProxy.say(args.dialog)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ip', default=NAO_IP)
+    parser.add_argument('--port', default=9559)
+    parser.add_argument('--posture', default="Crouch")
+    parser.add_argument('--dialog', default="Ciao a tutti!")
+    args = parser.parse_args()
+    go_to_posture(args)
+    say(args)
