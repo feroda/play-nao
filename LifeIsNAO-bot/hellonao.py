@@ -21,6 +21,11 @@ from settings import TOKEN, NAO_IP, NAO_PORT, chat_id
 event_received = 0
 sockinfo = None
 
+import time
+
+import argparse
+
+import sys
 filepath = '/home/remus/play-nao/LifeIsNAO-bot/abc.txt'
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
