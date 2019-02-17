@@ -10,13 +10,8 @@ from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMa
 #aggiungee "Bot" alla linea sopra
 #presentazione conclusa
 
-<<<<<<< HEAD
 from naoqi import *
-=======
-from naoqi import ALProxy, ALModule
->>>>>>> aggiunta funzione di lettura ddel file e chat_id
-
-from settings import TOKEN, NAO_IP, NAO_PORT, chat_id
+from settings import TOKEN, NAO_IP, NAO_PORT, EXPERTS_CHAT_ID
 
 event_received = 0
 sockinfo = None
@@ -124,6 +119,21 @@ def fileread(bot, update):
         tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
         tts.say(msg)
 
+def fileread_media(bot, update):
+    i = 0
+    while(i<10):
+      with open(filepath) as F:
+        line = F.readline()
+        if line != 'NODATA' and line != 'ERROR':
+          value = float(line)/160
+          i = i+1
+        #inserrire eventuale delay
+        update.message.reply_text(value)
+
+        msg = 'Il valore è {}'.format(
+        value  
+        ).replace('.', ',')
+
 class HumanAnsweredQuestionModule(ALModule):
     """ A simple module able to react
     to facedetection events
@@ -172,11 +182,11 @@ class HumanAnsweredQuestionModule(ALModule):
                 break
 
         # Leggere il valore istantaneo dal sensore
-        freq_value = fileread(bot, update)
+        freq_value = fileread()
                      # TODO  scrivere funzione fileread_sensor()
         msg += " * FREQUENZA: {}".format(
-        value
-        ).replace('.', ',') % freq_value
+        freq_value
+        ).replace('.', ',')
         #msg += " * FREQUENZA: %s\n" % freq_value
         # Leggere gli ultimi 10 valori dal sensore
         #i = 0
@@ -186,7 +196,7 @@ class HumanAnsweredQuestionModule(ALModule):
 
         # Inviare il messaggio al BOT
         # TODO bot.send_message(chat_id, msg)
-        bot.send_message(chat_id, msg)
+        bot.send_message(EXPERTS_CHAT_ID, msg)
 
         # OLD Subscribe again to the event
         # OLD memory.subscribeToEvent("FaceDetected",
@@ -225,7 +235,7 @@ def main():
 # bot = Bot(TOKEN)
 # subscribe to event
 # nella funzione o nel modulo chiamato come callback si fa
-# bot.send_message(chat_id, msg)
+#bot.send_message(chat_id, msg)
 # dove msg è il testo recuperato dalla memoria di NAO
 
 
@@ -265,6 +275,7 @@ class HumanAnsweredQuestionModule(ALModule):
         # OLD     "HumanAnsweredQuestion")
 
 
+<<<<<<< HEAD
         print("Rilevata risposta")
         msg = ""
         for i in range(len(self.questions)):
@@ -323,6 +334,9 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('naosay', naosay))
     updater.dispatcher.add_handler(CommandHandler('naopresent', present))
     updater.dispatcher.add_handler(CommandHandler('p', p))
+    # updater.dispatcher.add_handler(CallbackQueryHandler(button))
+    updater.dispatcher.add_handler(CommandHandler('fileread', fileread))
+    updater.dispatcher.add_handler(CommandHandler('fileread_media', fileread_media))
     updater.dispatcher.add_error_handler(error)
 
     updater.start_polling()
