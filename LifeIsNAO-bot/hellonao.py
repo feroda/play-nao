@@ -136,7 +136,7 @@ def fileread(bot, update):
 def fileread_media(bot, update):
     i = 0
     while(i<10):
-      with open(filepath) as F:
+      with open(FILEPATH) as F:
         line = F.readline()
         if line != 'NODATA' and line != 'ERROR':
           value = float(line)/160
