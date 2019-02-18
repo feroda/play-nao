@@ -163,10 +163,9 @@ class HumanAnsweredQuestionModule(ALModule):
         # Create a proxy to ALTextToSpeech for later use
         self.tts = ALProxy("ALTextToSpeech")
 
-        # Subscribe to the FaceDetected event:
-        global memory
-        memory = ALProxy("ALMemory")
-        memory.subscribeToEvent("AnswerGiven",
+        # Subscribe to the AnswerGiven event:
+        self.memory = ALProxy("ALMemory")
+        self.memory.subscribeToEvent("AnswerGiven",
             "HumanAnsweredQuestion",
             "onAnswerGiven")
 
@@ -182,7 +181,7 @@ class HumanAnsweredQuestionModule(ALModule):
         """
         # OLD Unsubscribe to the event when talking,
         # OLD to avoid repetitions
-        # OLD memory.unsubscribeToEvent("FaceDetected",
+        # OLD self.memory.unsubscribeToEvent("FaceDetected",
         # OLD     "HumanAnsweredQuestion")
 
 
@@ -191,7 +190,7 @@ class HumanAnsweredQuestionModule(ALModule):
         for i in range(len(self.questions)):
             try:
                 question = self.questions[i]
-                answer = memory.GetData("domanda/%s" % i+1)
+                answer = self.memory.GetData("domanda/%s" % i+1)
                 msg += u"* Q:%s A:%s\n" % (question, answer)
             except Exception as e:
                 # Qui ci va alla prima chiave che non esiste
@@ -214,7 +213,7 @@ class HumanAnsweredQuestionModule(ALModule):
         self.bot.send_message(EXPERTS_CHAT_ID, msg)
 
         # OLD Subscribe again to the event
-        # OLD memory.subscribeToEvent("FaceDetected",
+        # OLD self.memory.subscribeToEvent("FaceDetected",
         # OLD     "HumanAnsweredQuestion",
         # OLD     "onFaceDetected")
 
