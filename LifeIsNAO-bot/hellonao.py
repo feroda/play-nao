@@ -104,20 +104,29 @@ def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
-def fileread(bot, update):
+
+def hrm_read():
+    """
+    return str of heartrate
+    """
+
     with open(filepath) as F:
-      line = F.readline()
-      if line != 'NODATA' and line != 'ERROR':
-        value = float(line)/160
+        line = F.readline()
+        if line != 'NODATA' and line != 'ERROR':
+            value = float(line)/160
+            line = str(value).replace('.', ',')
 
-        update.message.reply_text(value)
+    return line
 
-        msg = 'Il valore è {}'.format(
-        value
-        ).replace('.', ',')
 
-        tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
-        tts.say(msg)
+def fileread(bot, update):
+
+    value = hrm_read()
+    update.message.reply_text(value)
+    msg = 'Il valore è {}'.format(value)
+    tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
+    tts.say(msg)
+
 
 def fileread_media(bot, update):
     i = 0
@@ -182,11 +191,9 @@ class HumanAnsweredQuestionModule(ALModule):
                 break
 
         # Leggere il valore istantaneo dal sensore
-        freq_value = fileread()
-                     # TODO  scrivere funzione fileread_sensor()
-        msg += " * FREQUENZA: {}".format(
-        freq_value
-        ).replace('.', ',')
+        freq_value = hrm_read()
+        msg += " * FREQUENZA: {}".format(freq_value)
+
         #msg += " * FREQUENZA: %s\n" % freq_value
         # Leggere gli ultimi 10 valori dal sensore
         #i = 0
