@@ -139,8 +139,10 @@ def fileread_media(bot, update):
       with open(FILEPATH) as F:
         line = F.readline()
         if line != 'NODATA' and line != 'ERROR':
-          value = float(line)/160
-          i = i+1
+            value = float(line)/160
+            i = i+1
+        else:
+            value = line
         #inserire eventuale delay
         update.message.reply_text(value)
 
