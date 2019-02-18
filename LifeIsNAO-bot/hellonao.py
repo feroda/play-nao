@@ -159,6 +159,7 @@ class HumanAnsweredQuestionModule(ALModule):
         # No need for IP and port here because
         # we have our Python broker connected to NAOqi broker
 
+        self.bot = Bot(TOKEN)
         # Create a proxy to ALTextToSpeech for later use
         self.tts = ALProxy("ALTextToSpeech")
 
@@ -210,8 +211,7 @@ class HumanAnsweredQuestionModule(ALModule):
 
 
         # Inviare il messaggio al BOT
-        # TODO bot.send_message(chat_id, msg)
-        bot.send_message(EXPERTS_CHAT_ID, msg)
+        self.bot.send_message(EXPERTS_CHAT_ID, msg)
 
         # OLD Subscribe again to the event
         # OLD memory.subscribeToEvent("FaceDetected",
@@ -253,7 +253,6 @@ def main():
 #   risp = ALProxy("ALMemory", sockinfo.ip, sockinfo.port)
 
 
-# bot = Bot(TOKEN)
 # subscribe to event
 # nella funzione o nel modulo chiamato come callback si fa
 #bot.send_message(chat_id, msg)
