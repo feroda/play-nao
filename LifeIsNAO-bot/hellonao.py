@@ -191,7 +191,7 @@ class HumanAnsweredQuestionModule(ALModule):
         for i in range(len(self.questions)):
             try:
                 question = self.questions[i-1]
-                answer = memory.GetData("Domanda/%s" % i)
+                answer = memory.GetData("domanda/%s" % i)
                 msg += u"* Q:%s A:%s\n" % (question, answer)
             except Exception as e:
                 # Qui ci va alla prima chiave che non esiste
@@ -200,7 +200,7 @@ class HumanAnsweredQuestionModule(ALModule):
 
         # Leggere il valore istantaneo dal sensore
         freq_value = hrm_read()
-        msg += " * FREQUENZA: {}".format(freq_value)
+        msg += " * FREQUENZA: {}\n".format(freq_value)
 
         #msg += " * FREQUENZA: %s\n" % freq_value
         # Leggere gli ultimi 10 valori dal sensore
