@@ -204,15 +204,21 @@ class HumanAnsweredQuestionModule(ALModule):
         # OLD     "onFaceDetected")
 
 def main():
-
+    
     # Parse Args
     parser = argparse.ArgumentParser()
     parser.add_argument('--ip', default=NAO_IP)
     parser.add_argument('--port', default=NAO_PORT, type=int)
+    parser.add_argument('--volume', default=0.8, type=float)
     # Enable or disable naoqi
     # parser.add_argument('--naoqi', action="store_true", default=False)
     global sockinfo
     sockinfo = parser.parse_args()
+
+    #impostazione di lingua e volume
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tts.setLanguage("Italian")
+    tts.setVolume(sockinfo.volume)
 
     # Start NAO Broker
     myBroker = ALBroker("myBroker", "0.0.0.0", 0, sockinfo.ip, sockinfo.port)
