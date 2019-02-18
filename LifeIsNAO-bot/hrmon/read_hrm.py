@@ -17,7 +17,7 @@ while True:
             with open("/var/lib/nao-debian/dev/shm/hrm_instant.txt", "w") as f:
                 f.write(str(mx30.ir))
             with open("/var/lib/nao-debian/dev/shm/hrm_buffer.txt", "w") as f:
-                f.write("\n".join(map(str, mx30.buffer_ir[:-20])))
+                f.write("\n".join(map(str, mx30.buffer_ir[-20:])))
         else:
             with open("/var/lib/nao-debian/dev/shm/hrm_instant.txt", "w") as f:
                 f.write("NODATA")
