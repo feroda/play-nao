@@ -190,8 +190,8 @@ class HumanAnsweredQuestionModule(ALModule):
         msg = ""
         for i in range(len(self.questions)):
             try:
-                question = self.questions[i-1]
-                answer = memory.GetData("domanda/%s" % i)
+                question = self.questions[i]
+                answer = memory.GetData("domanda/%s" % i+1)
                 msg += u"* Q:%s A:%s\n" % (question, answer)
             except Exception as e:
                 # Qui ci va alla prima chiave che non esiste
