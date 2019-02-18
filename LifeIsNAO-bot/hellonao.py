@@ -99,7 +99,7 @@ def p(bot, update):
 #     print ("bottone")
 #     query.edit_message_text(text="Selected option: {}".format(query.data))
 
-def error(update, context):
+def error(bot, update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
