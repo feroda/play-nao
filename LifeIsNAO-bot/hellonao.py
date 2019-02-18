@@ -11,11 +11,17 @@ from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMa
 #presentazione conclusa
 
 from naoqi import *
-
-from settings import TOKEN, NAO_IP, NAO_PORT
+from settings import TOKEN, NAO_IP, NAO_PORT, EXPERTS_CHAT_ID
 
 event_received = 0
 sockinfo = None
+
+import time
+
+import argparse
+
+import sys
+filepath = '/home/remus/play-nao/LifeIsNAO-bot/abc.txt'
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -98,6 +104,135 @@ def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
+def fileread(bot, update):
+    with open(filepath) as F:
+      line = F.readline()
+      if line != 'NODATA' and line != 'ERROR':
+        value = float(line)/160
+        
+        update.message.reply_text(value)
+
+        msg = 'Il valore è {}'.format(
+        value  
+        ).replace('.', ',')
+
+        tts = ALProxy("ALTextToSpeech", NAO_IP, NAO_PORT)
+        tts.say(msg)
+
+def fileread_media(bot, update):
+    i = 0
+    while(i<10):
+      with open(filepath) as F:
+        line = F.readline()
+        if line != 'NODATA' and line != 'ERROR':
+          value = float(line)/160
+          i = i+1
+        #inserrire eventuale delay
+        update.message.reply_text(value)
+
+        msg = 'Il valore è {}'.format(
+        value  
+        ).replace('.', ',')
+
+class HumanAnsweredQuestionModule(ALModule):
+    """ A simple module able to react
+    to facedetection events
+    """
+    def __init__(self, name):
+        ALModule.__init__(self, name)
+        # No need for IP and port here because
+        # we have our Python broker connected to NAOqi broker
+
+        # Create a proxy to ALTextToSpeech for later use
+        self.tts = ALProxy("ALTextToSpeech")
+
+        # Subscribe to the FaceDetected event:
+        global memory
+        memory = ALProxy("ALMemory")
+        memory.subscribeToEvent("AnswerGiven",
+            "HumanAnsweredQuestion",
+            "onAnswerGiven")
+
+        self.answers = []
+        # Inserire qui le domande vere
+        self.questions = [
+            "Quanti hanni hai?",
+            "Hai mangiato oggi?",
+        ]
+
+    def onAnswerGiven(self, *args):
+        """ This will be called each time an answer is given
+        """
+        # OLD Unsubscribe to the event when talking,
+        # OLD to avoid repetitions
+        # OLD memory.unsubscribeToEvent("FaceDetected",
+        # OLD     "HumanAnsweredQuestion")
+
+
+        print("Rilevata risposta")
+        msg = ""
+        for i in range(len(self.questions)):
+            try:
+                question = self.questions[i-1]
+                answer = memory.GetData("Domanda/%s" % i)
+                msg += u"* Q:%s A:%s\n" % (question, answer)
+            except Exception as e:
+                # Qui ci va alla prima chiave che non esiste
+                # Esce dal ciclo
+                break
+
+        # Leggere il valore istantaneo dal sensore
+        freq_value = fileread()
+                     # TODO  scrivere funzione fileread_sensor()
+        msg += " * FREQUENZA: {}".format(
+        freq_value
+        ).replace('.', ',')
+        #msg += " * FREQUENZA: %s\n" % freq_value
+        # Leggere gli ultimi 10 valori dal sensore
+        #i = 0
+        last_frequencies = "" # TODO scrivere funzione fileread_sensor_last_values(n=10)
+        msg += " * ULTIME: %s\n" % last_frequencies
+       
+
+        # Inviare il messaggio al BOT
+        # TODO bot.send_message(chat_id, msg)
+        bot.send_message(EXPERTS_CHAT_ID, msg)
+
+        # OLD Subscribe again to the event
+        # OLD memory.subscribeToEvent("FaceDetected",
+        # OLD     "HumanAnsweredQuestion",
+        # OLD     "onFaceDetected")
+
+def main():
+    
+    # Parse Args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ip', default=NAO_IP)
+    parser.add_argument('--port', default=NAO_PORT, type=int)
+    parser.add_argument('--volume', default=0.8, type=float)
+    # Enable or disable naoqi
+    # parser.add_argument('--naoqi', action="store_true", default=False)
+    global sockinfo
+    sockinfo = parser.parse_args()
+
+    #impostazione di lingua e volume
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tts.setLanguage("Italian")
+    tts.setVolume(sockinfo.volume)
+
+    # Start NAO Broker
+    myBroker = ALBroker("myBroker", "0.0.0.0", 0, sockinfo.ip, sockinfo.port)
+    # Warning: HumanAnsweredQuestion must be a global variable
+    # The name given to the constructor must be the name of the
+    # variable
+    global HumanAnsweredQuestion
+    HumanAnsweredQuestion = HumanAnsweredQuestionModule("HumanAnsweredQuestion")
+
+    # Start BOT
+    def terminate(self, signal_name):
+        print("Interrupted bot and NAO module by user, shutdown")
+        myBroker.shutdown()
+        sys.exit(0)
 
 #def Q&A():
 #   risp = ALProxy("ALMemory", sockinfo.ip, sockinfo.port)
@@ -106,7 +241,7 @@ def error(update, context):
 # bot = Bot(TOKEN)
 # subscribe to event
 # nella funzione o nel modulo chiamato come callback si fa
-# bot.send_message(chat_id, msg)
+#bot.send_message(chat_id, msg)
 # dove msg è il testo recuperato dalla memoria di NAO
 
 
@@ -146,6 +281,7 @@ class HumanAnsweredQuestionModule(ALModule):
         # OLD     "HumanAnsweredQuestion")
 
 
+<<<<<<< HEAD
         print("Rilevata risposta")
         msg = ""
         for i in range(len(self.questions)):
@@ -204,6 +340,9 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('naosay', naosay))
     updater.dispatcher.add_handler(CommandHandler('naopresent', present))
     updater.dispatcher.add_handler(CommandHandler('p', p))
+    # updater.dispatcher.add_handler(CallbackQueryHandler(button))
+    updater.dispatcher.add_handler(CommandHandler('fileread', fileread))
+    updater.dispatcher.add_handler(CommandHandler('fileread_media', fileread_media))
     updater.dispatcher.add_error_handler(error)
 
     updater.start_polling()
