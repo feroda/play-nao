@@ -5,8 +5,8 @@ import time
 import argparse
 import sys
 
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Bot
-from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, Bot
 #aggiungee "Bot" alla linea sopra
 #presentazione conclusa
 
