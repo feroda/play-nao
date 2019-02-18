@@ -117,7 +117,7 @@ def hrm_read():
 
     return line
 
-def hrm_read_last_values():
+def hrm_read_buffer():
 
     with open(buffer_filepath) as F:
         lines = F.read()
