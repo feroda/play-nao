@@ -11,7 +11,7 @@ from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMa
 #presentazione conclusa
 
 from naoqi import *
-from settings import TOKEN, NAO_IP, NAO_PORT, EXPERTS_CHAT_ID
+from settings import TOKEN, NAO_IP, NAO_PORT, EXPERTS_CHAT_ID, FILEPATH, BUFFER_FILEPATH
 
 event_received = 0
 sockinfo = None
@@ -21,7 +21,6 @@ import time
 import argparse
 
 import sys
-filepath = '/home/remus/play-nao/LifeIsNAO-bot/abc.txt'
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -118,6 +117,12 @@ def hrm_read():
 
     return line
 
+def hrm_read_last_values():
+
+    with open(buffer_filepath) as F:
+        lines = F.read()
+
+    return lines.split("\n")
 
 def fileread(bot, update):
 
@@ -197,8 +202,9 @@ class HumanAnsweredQuestionModule(ALModule):
         #msg += " * FREQUENZA: %s\n" % freq_value
         # Leggere gli ultimi 10 valori dal sensore
         #i = 0
-        last_frequencies = "" # TODO scrivere funzione fileread_sensor_last_values(n=10)
-        msg += " * ULTIME: %s\n" % last_frequencies
+        hrm_read_last_values = hrm_read_buffer()
+        last_10_frequencies = "; ".join(hrm_read_last_values[-10:])
+        msg += " * ULTIME 10 FREQUENZE: %s\n" % last_10_frequencies
 
 
         # Inviare il messaggio al BOT
