@@ -56,7 +56,7 @@ def build_menu(buttons,
 
 def present(bot, update):
   button_table = [
-      [InlineKeyboardButton("/p Valerio", callback_data="1"),
+      [InlineKeyboardButton("/v Valerio", callback_data="1"),
       InlineKeyboardButton("/p Guramrit", callback_data="Guramrit")
       ],
       [
@@ -72,7 +72,7 @@ def present(bot, update):
       InlineKeyboardButton("/p Amira", callback_data="Amira")
       ],
       [
-      InlineKeyboardButton("/p Jamila", callback_data="Jamila"),
+      InlineKeyboardButton("/f Jamila", callback_data="Jamila"),
       InlineKeyboardButton("/p Giacomo", callback_data="Giacomo")
       ]
   ]
@@ -92,6 +92,22 @@ def p(bot, update):
 
     tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
     tts.say(pst)
+
+def f(bot, update):
+    msg ='Jamila, manchi solo tu. Presentati!'
+
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tss.say(msg)
+
+    update.message.reply_text(msg)
+
+def v(bot, update):
+    msg = 'Dai Valerio, inizia tu a presentarti!'
+
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tss.say(msg)    
+
+    update.message.reply_text(msg)
 
 # def button(update, context):
 #     print("Bottone")
@@ -150,6 +166,11 @@ def fileread_media(bot, update):
         value
         ).replace('.', ',')
 
+def finish(bot, update):
+    tss.say("OK, la presentazione è finita")
+
+    update.message.reply_text(msg)
+
 class HumanAnsweredQuestionModule(ALModule):
     """ A simple module able to react
     to facedetection events
@@ -172,8 +193,11 @@ class HumanAnsweredQuestionModule(ALModule):
         self.answers = []
         # Inserire qui le domande vere
         self.questions = [
-            "Quanti hanni hai?",
-            "Hai mangiato oggi?",
+            "Ciao amico io sono nao vuoi che ti faccia delle domande?",
+            "Hai mai subito degli atti di bullismo?",
+            "Dove hai subito questi atti di bullismo?",
+            "E' mai intervenuto qualche professore ad aiutarti?",
+            "Che ne dici di parlarne con me?"
         ]
 
     def onAnswerGiven(self, *args):
@@ -262,6 +286,8 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('naosay', naosay))
     updater.dispatcher.add_handler(CommandHandler('naopresent', present))
     updater.dispatcher.add_handler(CommandHandler('p', p))
+    updater.dispatcher.add_handler(CommandHandler('f', f))
+    updater.dispatcher.add_handler(CommandHandler('v', v))
     # updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_handler(CommandHandler('fileread', fileread))
     updater.dispatcher.add_handler(CommandHandler('fileread_media', fileread_media))
