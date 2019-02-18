@@ -109,7 +109,7 @@ def hrm_read():
     return str of heartrate
     """
 
-    with open(filepath) as F:
+    with open(FILEPATH) as F:
         line = F.readline()
         if line != 'NODATA' and line != 'ERROR':
             value = float(line)/160
@@ -119,7 +119,7 @@ def hrm_read():
 
 def hrm_read_buffer():
 
-    with open(buffer_filepath) as F:
+    with open(BUFFER_FILEPATH) as F:
         lines = F.read()
 
     return lines.split("\n")
