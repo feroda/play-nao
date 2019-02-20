@@ -56,24 +56,27 @@ def build_menu(buttons,
 
 def present(bot, update):
   button_table = [
-      [InlineKeyboardButton("/v Valerio", callback_data="1"),
-      InlineKeyboardButton("/p Guramrit", callback_data="Guramrit")
+      [InlineKeyboardButton("/v Nicolas", callback_data="Nicolas"),
+      InlineKeyboardButton("/d Valerio", callback_data="Valerio")
       ],
       [
-      InlineKeyboardButton("/p Gursharn", callback_data="Gursharn"),
-      InlineKeyboardButton("/p Angelo", callback_data="Angelo")
+      InlineKeyboardButton("/w Giàcòmo", callback_data="Giacomo"),
+      InlineKeyboardButton("/d Nando", callback_data="Nando")
       ],
       [
-      InlineKeyboardButton("/p Ferdinando", callback_data="Ferdinando"),
-      InlineKeyboardButton("/p Nicolas", callback_data="Nicolas")
+      InlineKeyboardButton("/p Angelo", callback_data="Angelo"),
+      InlineKeyboardButton("/w Gùramrit", callback_data="Guramrit")
       ],
       [
-      InlineKeyboardButton("/p Marta", callback_data="Marta"),
-      InlineKeyboardButton("/p Amira", callback_data="Amira")
+      InlineKeyboardButton("/d Marta", callback_data="Marta"),
+      InlineKeyboardButton("/a Amira", callback_data="Amira")
       ],
       [
-      InlineKeyboardButton("/f Jamila", callback_data="Jamila"),
-      InlineKeyboardButton("/p Giacomo", callback_data="Giacomo")
+      InlineKeyboardButton("/w Gùrsharn", callback_data="Gursharn"),
+      InlineKeyboardButton("/f Jamila", callback_data="Jamila")
+      ],
+      [
+      InlineKeyboardButton("/finish", callback_data="Fine")
       ]
   ]
   print(button_table)
@@ -93,19 +96,56 @@ def p(bot, update):
     tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
     tts.say(pst)
 
-def f(bot, update):
-    msg ='Jamila, manchi solo tu. Presentati!'
+def a(bot, update):
+    pst = u'Ora parla Amòra, oh scusate {} '.format(
+		update.message.text[len('/a '):])
+
+    update.message.reply_text(pst)
 
     tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
-    tss.say(msg)
+    tts.say(pst.encode("utf-8"))
+    tts.say(pst)
+
+def d(bot, update):
+    pst = 'Bene, {} adesso presèntati tu!'.format(
+		update.message.text[len('/d '):])
+
+    update.message.reply_text(pst)
+
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tts.say(pst)
+
+def w(bot, update):
+    pst = u'{}, è il tuo turno!'.format(
+		update.message.text[len('/w '):])
+
+    update.message.reply_text(pst)
+
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tts.say(pst.encode("utf-8"))
+    tts.say(pst)
+
+def f(bot, update):
+    msg ='Jamila, manchi solo tu, presèntati!'
+
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tts.say(msg)
+
+    update.message.reply_text(msg)
+
+def lol(bot, update):
+    msg = 'Amira, hai parlato abbastanza ora basta'
+
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tts.say(msg)    
 
     update.message.reply_text(msg)
 
 def v(bot, update):
-    msg = 'Dai Valerio, inizia tu a presentarti!'
+    msg = 'Dai Nìcolas, inizia tu a presentarti!'
 
     tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
-    tss.say(msg)    
+    tts.say(msg)    
 
     update.message.reply_text(msg)
 
@@ -167,7 +207,8 @@ def fileread_media(bot, update):
         ).replace('.', ',')
 
 def finish(bot, update):
-    tss.say("OK, la presentazione è finita")
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tts.say("Tanti auguri Jamila! Ora festeggiamo insieme!")
 
     update.message.reply_text(msg)
 
@@ -287,7 +328,12 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('naopresent', present))
     updater.dispatcher.add_handler(CommandHandler('p', p))
     updater.dispatcher.add_handler(CommandHandler('f', f))
+    updater.dispatcher.add_handler(CommandHandler('w', w))
+    updater.dispatcher.add_handler(CommandHandler('d', d))
     updater.dispatcher.add_handler(CommandHandler('v', v))
+    updater.dispatcher.add_handler(CommandHandler('a', a))
+    updater.dispatcher.add_handler(CommandHandler('finish', finish))
+    updater.dispatcher.add_handler(CommandHandler('lol', lol))
     # updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_handler(CommandHandler('fileread', fileread))
     updater.dispatcher.add_handler(CommandHandler('fileread_media', fileread_media))
