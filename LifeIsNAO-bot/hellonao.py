@@ -60,7 +60,7 @@ def present(bot, update):
       InlineKeyboardButton("/d Valerio", callback_data="Valerio")
       ],
       [
-      InlineKeyboardButton("/w Giàcòmo", callback_data="Giacomo"),
+      InlineKeyboardButton("/w Giàcomo", callback_data="Giacomo"),
       InlineKeyboardButton("/d Nando", callback_data="Nando")
       ],
       [
@@ -72,7 +72,7 @@ def present(bot, update):
       InlineKeyboardButton("/a Amira", callback_data="Amira")
       ],
       [
-      InlineKeyboardButton("/w Gùrsharn", callback_data="Gursharn"),
+      InlineKeyboardButton("/s Gùrsharn", callback_data="Gursharn"),
       InlineKeyboardButton("/f Jamila", callback_data="Jamila")
       ],
       [
@@ -127,6 +127,14 @@ def w(bot, update):
 
 def f(bot, update):
     msg ='Jamila, manchi solo tu, presèntati!'
+
+    tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
+    tts.say(msg)
+
+    update.message.reply_text(msg)
+
+def s(bot, update):
+    msg ='Ora presentati tu, mio salvatore!'
 
     tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
     tts.say(msg)
@@ -332,6 +340,7 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('d', d))
     updater.dispatcher.add_handler(CommandHandler('v', v))
     updater.dispatcher.add_handler(CommandHandler('a', a))
+    updater.dispatcher.add_handler(CommandHandler('s', s))
     updater.dispatcher.add_handler(CommandHandler('finish', finish))
     updater.dispatcher.add_handler(CommandHandler('lol', lol))
     # updater.dispatcher.add_handler(CallbackQueryHandler(button))
