@@ -4,7 +4,7 @@ Questo progetto contiene esperimenti con il [robot NAO](https://www.ald.softbank
 
 Un elenco completo di esempi per le varie funzioni di libreria è consultabile
 nella documentazione online della API di NAO all'indirizzo:
-http://doc.aldebaran.com/1-14/naoqi/
+http://doc.aldebaran.com/2-1/naoqi/
 
 ## Contenuto della directory
 
@@ -15,9 +15,9 @@ Ecco una presentazione dei file contenuti in questo repository:
 
 ## Come riprodurre
 
-Per riprodurre gli eseprimenti è sufficiente installare:
+Per riprodurre gli esperimenti è sufficiente installare:
 
-* l'interprete python versione 2.7
+* l'interprete python versione 2.7 (verificabile con il comando `python --version`)
 * la libreria python distribuita da Aldebaraan `pynaoqi`, scarcabile dopo essersi registrati nella community di NAO
 
 Come scritto nelle istruzioni la libreria pynaoqi deve essere installata nelle librerie di sistema,
