@@ -4,6 +4,7 @@ import logging
 import time
 import argparse
 import sys
+sys.path.append('/opt/pynaoqi-python2.7-2.1.2.17-linux32/')
 
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, Bot
@@ -16,11 +17,9 @@ from settings import TOKEN, NAO_IP, NAO_PORT, EXPERTS_CHAT_ID, FILEPATH, BUFFER_
 event_received = 0
 sockinfo = None
 
-import time
+import matplotlib
+import matplotlib.pyplot as plt
 
-import argparse
-
-import sys
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -220,6 +219,27 @@ def finish(bot, update):
 
     update.message.reply_text(msg)
 
+def plot(bot, update):
+    
+    hrm_read_last_values = hrm_read_buffer()
+    
+        # x = [(hrm_read_last_values[-10:])]
+    
+    x = [1,2,3,4,5,6,7,8,9,10]
+    y = [1,2,3,4,5,6,7,8,9,10]
+
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+
+    ax.set(xlabel='time (s)', ylabel='battiti (bpm)',
+       title='Monitor cardiaco')
+    ax.grid()
+
+    fig.savefig("grafico.png")
+    
+    with open('/var/lib/nao-debian/dev/shm/grafico.png', 'rb') as f:
+        return bot.send_photo(EXPERTS_CHAT_ID, photo=f, timeout=50).photo
+
 class HumanAnsweredQuestionModule(ALModule):
     """ A simple module able to react
     to facedetection events
@@ -263,7 +283,7 @@ class HumanAnsweredQuestionModule(ALModule):
         for i in range(len(self.questions)):
             try:
                 question = self.questions[i]
-                answer = self.memory.getData("domanda/%s" % (i+1))
+                answer = self.memory.GetData("domanda/%s" % (i+1))
                 msg += u"* Q:%s A:%s\n" % (question, answer)
             except Exception as e:
                 # Qui ci va alla prima chiave che non esiste
@@ -346,6 +366,7 @@ def main():
     # updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_handler(CommandHandler('fileread', fileread))
     updater.dispatcher.add_handler(CommandHandler('fileread_media', fileread_media))
+    updater.dispatcher.add_handler(CommandHandler('plot', plot))
     updater.dispatcher.add_error_handler(error)
 
     updater.start_polling()
