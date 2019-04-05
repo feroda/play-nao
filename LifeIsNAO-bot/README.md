@@ -59,6 +59,7 @@ Sulla scheda è in esecuzione un processo che legge il sensore e scrive le lettu
 
   * `/var/lib/nao-debian/dev/shm/hrm_instant.txt`: per la lettura istantanea;
   * `/var/lib/nao-debian/dev/shm/hrm_buffer.txt`: per le ultime 100 letture.
+  * `/var/lib/nao-debian/dev/shm/grafico.png`: per il grafico delle ultime 10 letture
 
 Quando il bot riceve l'evento può inviare l'ultima lettura
 traendola da `hrm_instant.txt` e le ultime 10 letture traendole dall'altro file.
