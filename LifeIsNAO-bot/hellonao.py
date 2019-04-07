@@ -144,7 +144,7 @@ def lol(bot, update):
     msg = 'Amira, hai parlato abbastanza ora basta'
 
     tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
-    tts.say(msg)    
+    tts.say(msg)
 
     update.message.reply_text(msg)
 
@@ -152,7 +152,7 @@ def v(bot, update):
     msg = 'Dai Nìcolas, inizia tu a presentarti!'
 
     tts = ALProxy("ALTextToSpeech", sockinfo.ip, sockinfo.port)
-    tts.say(msg)    
+    tts.say(msg)
 
     update.message.reply_text(msg)
 
@@ -220,23 +220,7 @@ def finish(bot, update):
     update.message.reply_text(msg)
 
 def plot(bot, update):
-    
-    hrm_read_last_values = hrm_read_buffer()
-    
-        # x = [(hrm_read_last_values[-10:])]
-    
-    x = [1,2,3,4,5,6,7,8,9,10]
-    y = [1,2,3,4,5,6,7,8,9,10]
 
-    fig, ax = plt.subplots()
-    ax.plot(x, y)
-
-    ax.set(xlabel='time (s)', ylabel='battiti (bpm)',
-       title='Monitor cardiaco')
-    ax.grid()
-
-    fig.savefig("grafico.png")
-    
     with open('/var/lib/nao-debian/dev/shm/grafico.png', 'rb') as f:
         return bot.send_photo(EXPERTS_CHAT_ID, photo=f, timeout=50).photo
 
