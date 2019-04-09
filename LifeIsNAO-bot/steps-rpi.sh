@@ -21,6 +21,7 @@ git pull
 for d in sys dev proc run; do
 	mount -o bind /$d /var/lib/nao-debian/$d
 done
+mount -o bind /dev/shm /var/lib/nao-debian/dev/shm
 mount -o bind /dev/pts /var/lib/nao-debian/dev/pts
 
 chroot /var/lib/nao-debian/
