@@ -29,6 +29,7 @@ def scrivi_grafico():
     ax.grid()
 
     fig.savefig(GRAFICO_FILEPATH)
+    plt.close(fig)
 
 
 while True:
