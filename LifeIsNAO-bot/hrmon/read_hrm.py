@@ -31,18 +31,22 @@ def scrivi_grafico():
     fig.savefig(GRAFICO_FILEPATH)
     plt.close(fig)
 
-
+c = 0
 while True:
     try:
+        c += 1
         mx30.read_sensor()
         print("ir=%s red=%s" % (mx30.ir, mx30.red))
+
         if mx30.ir >= 1000:
             with open(INSTANT_FILEPATH, "w") as f:
                 f.write(str(mx30.ir))
             with open(BUFFER_FILEPATH, "w") as f:
                 print(mx30.buffer_ir[-20:])
                 f.write("\n".join(map(str, mx30.buffer_ir[-20:])))
-            scrivi_grafico()
+            if c >= 10:
+                scrivi_grafico()
+                c = 0
         else:
             with open(INSTANT_FILEPATH, "w") as f:
                 f.write("NODATA")
