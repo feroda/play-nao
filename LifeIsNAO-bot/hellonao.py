@@ -217,8 +217,12 @@ def finish(bot, update):
 
 def plot(bot, update):
 
-    with open('/var/lib/nao-debian/dev/shm/grafico.png', 'rb') as f:
-        return bot.send_photo(EXPERTS_CHAT_ID, photo=f, timeout=50).photo
+    if os.path.exists('/dev/shm/grafico.png'):
+        with open('/dev/shm/grafico.png', 'rb') as f:
+            return bot.send_photo(EXPERTS_CHAT_ID, photo=f, timeout=50).photo
+    else:
+        msg = "Grafico non ancora disponibile"
+        update.message.reply_text(msg)
 
 class HumanAnsweredQuestionModule(ALModule):
     """ A simple module able to react
