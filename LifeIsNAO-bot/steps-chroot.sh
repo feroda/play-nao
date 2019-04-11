@@ -5,7 +5,7 @@ if [ ! `id -u` -eq 0 ]; then
     exit 100
 fi
 
-cat /var/lib/nao-debian/dev/shm/hrm_instant.txt
+cat /dev/shm/hrm_instant.txt
 if [ ! $? -eq 0 ]; then
     echo "You must launch the hrmon service with the steps-hrmon.sh script as user pi";
     exit 101;
@@ -19,8 +19,11 @@ mount -o bind /dev/pts /var/lib/nao-debian/dev/pts
 
 chroot /var/lib/nao-debian/
 
+sleep 1
 umount /var/lib/nao-debian/dev/shm
+sleep 1
 umount /var/lib/nao-debian/dev/pts
+sleep 1
 for d in sys dev proc run; do
 	umount /var/lib/nao-debian/$d
 done
