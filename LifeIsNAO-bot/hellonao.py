@@ -17,10 +17,6 @@ from settings import TOKEN, NAO_IP, NAO_PORT, EXPERTS_CHAT_ID, FILEPATH, BUFFER_
 event_received = 0
 sockinfo = None
 
-import matplotlib
-import matplotlib.pyplot as plt
-
-
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
