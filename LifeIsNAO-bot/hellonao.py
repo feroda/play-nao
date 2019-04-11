@@ -215,14 +215,21 @@ def finish(bot, update):
 
     update.message.reply_text(msg)
 
-def plot(bot, update):
-
+def plot(bot):
     if os.path.exists('/dev/shm/grafico.png'):
         with open('/dev/shm/grafico.png', 'rb') as f:
-            return bot.send_photo(EXPERTS_CHAT_ID, photo=f, timeout=50).photo
+            bot.send_photo(EXPERTS_CHAT_ID, photo=f, timeout=50).photo
+            return True
     else:
+        return False
+
+def plot_or_nomsg(bot, update):
+
+    rv = plot(bot)
+    if not rv:
         msg = "Grafico non ancora disponibile"
         update.message.reply_text(msg)
+    return rv
 
 class HumanAnsweredQuestionModule(ALModule):
     """ A simple module able to react
@@ -288,7 +295,7 @@ class HumanAnsweredQuestionModule(ALModule):
 
         # Inviare il messaggio al BOT
         self.bot.send_message(EXPERTS_CHAT_ID, msg)
-
+        plot(self.bot)
         # OLD Subscribe again to the event
         # OLD self.memory.subscribeToEvent("FaceDetected",
         # OLD     "HumanAnsweredQuestion",
@@ -350,7 +357,7 @@ def main():
     # updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_handler(CommandHandler('fileread', fileread))
     updater.dispatcher.add_handler(CommandHandler('fileread_media', fileread_media))
-    updater.dispatcher.add_handler(CommandHandler('plot', plot))
+    updater.dispatcher.add_handler(CommandHandler('plot', plot_or_nomsg))
     updater.dispatcher.add_error_handler(error)
 
     updater.start_polling()
