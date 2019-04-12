@@ -19,7 +19,8 @@ def scrivi_grafico():
     # x = [1,2,3,4,5,6,7,8,9,10]
     # y = [1,2,3,4,5,6,7,8,9,10]
 
-    y = mx30.buffer_ir[-10:]
+    last_values = mx30.buffer_ir[-10:]
+    y = [value/160 for value in last_values]
     x = range(1, len(y)+1)
 
     fig, ax = plt.subplots()
