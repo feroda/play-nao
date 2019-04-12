@@ -274,7 +274,7 @@ class HumanAnsweredQuestionModule(ALModule):
         for i in range(len(self.questions)):
             try:
                 question = self.questions[i]
-                answer = self.memory.GetData("domanda/%s" % (i+1))
+                answer = self.memory.getData("domanda/%s" % (i+1))
                 msg += u"* Q:%s A:%s\n" % (question, answer)
             except Exception as e:
                 # Qui ci va alla prima chiave che non esiste
@@ -294,6 +294,7 @@ class HumanAnsweredQuestionModule(ALModule):
 
 
         # Inviare il messaggio al BOT
+        print(msg)
         self.bot.send_message(EXPERTS_CHAT_ID, msg)
         plot(self.bot)
         # OLD Subscribe again to the event
