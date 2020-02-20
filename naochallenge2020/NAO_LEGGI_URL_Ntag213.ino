@@ -70,9 +70,29 @@ void loop() {
   }
 
   Serial.println("-- HO LETTO I DATI NEL TAG RFID NTAG213 --");
-  //TODO: Print URL type, by interpretation of the first byte
+  //Print URL type
+  switch (nfc_data[27]) {
+    case 1:
+      Serial.print("http://www.");
+      break;
+    case 2:
+      Serial.print("https://www.");
+      break;
+    case 3:
+      Serial.print("http://");
+      break;
+    case 4:
+      Serial.print("https://www.");
+      break;
+    case 5:
+      Serial.print("tel:");
+      break;
+    case 6:
+      Serial.print("mailto:");
+      break;
+  }
   
-  for (i=27; i<255; i++) {
+  for (i=28; i<255; i++) {
     if (nfc_data[i] == 0xFE) // End of string
       break;
     
