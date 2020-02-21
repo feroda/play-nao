@@ -12,7 +12,7 @@ NAO_PORT = 9559
 
 # porte TCP per il bind
 BIND_IP = '0.0.0.0'
-BIND_PORT = 8080
+BIND_PORT = 9080
 
 papers = [
     {  "id": 1,
