@@ -6,7 +6,6 @@ import copy
 from bottle import route, run, template
 from bottle import post, get, request, put, response
 
-from naoapiqi import ALProxy
 
 NAO_IP = '127.0.0.1'
 NAO_PORT = 9559
@@ -39,15 +38,15 @@ def paperapi_list():
     # (gestisce Content-Type ed encoding!)
     return {"body": papers}
 
-@put('/api/v1/papers/<id>')
+@route('/api/v1/papers/<id>')
 def paperapi_get(id):
 
     rv = { "body" : None }
 
     for paper in papers:
-        if paper['id'] == id:
+        if paper['id'] == int(id):
             rv["body"] = paper
 
     return rv
-
+    
 run(host=BIND_IP, port=BIND_PORT)
